@@ -35,7 +35,7 @@ __END__
 
 =head1 NAME
 
-unicode.pl - Finger Broker Clients.
+unicode.pl - Phonetic encoding demonstrations with the word "Unicode".
 
 =head1 SYNOPSIS
 
