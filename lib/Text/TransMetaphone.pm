@@ -7,7 +7,7 @@ BEGIN
 use strict;
 use vars qw($VERSION @EXPORT_OK %LocaleRanges);
 
-	$VERSION = "0.05a";
+	$VERSION = "0.06";
 
 	@EXPORT_OK = qw( trans_metaphone reverse_key );
 
@@ -111,7 +111,7 @@ Text::TransMetaphone - Translingual phonetic encoding of words.
 
 =head1 SYNOPSIS
 
-use Text::TransMetaphone qw( trans_metaphone, reverse_key );
+use Text::TransMetaphone qw( trans_metaphone reverse_key );
 
 my @keys = trans_metaphone ( "Waldo" );  # convert to IPA symbols 
 

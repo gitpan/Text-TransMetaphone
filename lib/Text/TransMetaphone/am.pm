@@ -4,14 +4,14 @@ package Text::TransMetaphone::am;
 # the BEGIN block the package will break.
 #
 use utf8;
-use Regexp::Ethiopic::Amharic 'overload';
+use Regexp::Ethiopic::Amharic qw(:forms setForm overload);
 
 BEGIN
 {
 	use strict;
 	use vars qw( $VERSION $LocaleRange %IMExpected %IMError %plosives );
 
-	$VERSION = '0.01';
+	$VERSION = '0.02';
 
 	$LocaleRange = qr/[ሀ-ቍበ-ኾዐ-ዷጀ-ጕጠ-፼]/;
 
@@ -24,10 +24,13 @@ BEGIN
 	);
 	%IMExpected =(
 		ስ => "s",
+		ጽ => "s'",
 		ቅ => "k'",
 		ቕ => "q",
 		ት => "t",
+		ጥ => "t'",
 		ች => "ʧ",
+		ጭ => "ʧ",
 		ን => "n",
 		ክ => "k",
 		ዝ => "z",
@@ -37,10 +40,13 @@ BEGIN
 	);
 	%IMError  =(
 		ስ => "s'",
+		ጽ => "s",
 		ቅ => "q",
 		ቕ => "k'",
 		ት => "t'",
+		ጥ => "t",
 		ች => "ʧ'",
+		ጭ => "ʧ'",
 		ን => "ɲ",
 		ክ => "x",
 		ዝ => "ʒ",
@@ -51,42 +57,27 @@ BEGIN
 }
 
 
-sub getሳድስ
-{
-my ($ሆሄ) = @_;
-
-	$ሆሄ =~ s/[ኈ-ኍ]/ኅ/;
-	$ሆሄ =~ s/[ቈ-ቍ]/ቀ/;
-	$ሆሄ =~ s/[ቘ-ቝ]/ቐ/;
-	$ሆሄ =~ s/[ኰ-ኵ]/ከ/;
-	$ሆሄ =~ s/[ዀ-ዅ]/ኸ/;
-	$ሆሄ =~ s/[ጐ-ጕ]/ገ/;
-
-	chr ( ord($ሆሄ) - ord($ሆሄ)%8 + 5 );
-}
-
-
 sub trans_metaphone
 {
 
 	$_ = $_[0];
 
 	#
-	# strip out all but first vowel:
+	#  strip out all but first vowel:
 	#
 	s/^[=#አ#=]/a/;
 	s/[=#አ#=]//g;
 
-	s/([#11#])/getሳድስ($1)."ዋ"/eg;
+	s/([#11#])/setForm($1,$ሳድስ)."ዋ"/eg;
 	s/[=#ሀ#=]/h/g;
 	s/[=#ሰ#=]/ሰ/g;
 	s/[=#ጸ#=]/ጸ/g;
 	# s/(.)[=#ጸ#=]/s'/g;  # compare this to ts in english, it should be a 2nd key
 
 	#
-	# now strip vowels, this simplies later code:
+	#  now strip vowels, this simplies later code:
 	#
-	s/(\p{InEthiopic})/ ($1 eq 'ኘ') ? $1 : getሳድስ($1)/eg;
+	s/(\p{InEthiopic})/ ($1 eq 'ኘ') ? $1 : setForm($1,$ሳድስ)/eg;
 
 	tr/ልምርሽብቭውይድጅግፍ/lmrʃbvwjdʤgf/;
 
@@ -96,7 +87,7 @@ sub trans_metaphone
 
 
 	#
-	#  mixed glyphs
+	#  mixed glyphs: ዽ for ጵ or ዽ is shift stick for ድ
 	#
 	if ( $keys[0] =~ /ዽ/ ) {
 		$keys[2] = $keys[1] = $keys[0];
@@ -106,7 +97,7 @@ sub trans_metaphone
 		$re =~ s/ዽ/([dɗ]|p')/g;
 	}
 	#
-	#  handle phonological problems
+	#  mixed glyphs: ኘ for ፕ or ኘ is shift stick for ነ
 	#
 	if ( $keys[0] =~ /ኘ/ ) {
 		my (@newKeysA, @newKeysB);
@@ -134,12 +125,12 @@ sub trans_metaphone
 	}
 
 #
-# try to keep least probably keys last:
+# try to keep least probable keys last:
 #
 	#
 	#  Handle IM problems
 	#
-	while ( $keys[0] =~ /([ቅንክትችስጵዝዥፕ])/ ) {
+	while ( $keys[0] =~ /([ስቅቕትችንክዝዥጥጭጽጵፕ])/ ) {
 		my $a = $1;
 		my @newKeys;
 		for (my $i=0; $i < @keys; $i++) {
@@ -151,7 +142,13 @@ sub trans_metaphone
 		}
 		push (@keys,@newKeys);  # add new keys to old keys
 
-		$re =~ s/$a/[$IMExpected{$a}$IMError{$a}]/g;
+		# print "$a => $IMExpected{$a} / $IMError{$a}\n";
+		if ( $plosives{$IMExpected{$a}} || $plosives{$IMError{$a}} ) {
+			$re =~ s/$a/($IMExpected{$a}|$IMError{$a})/g;
+		}
+		else {
+			$re =~ s/$a/[$IMExpected{$a}$IMError{$a}]/g;
+		}
 	}
 
 	if ( $#keys ) {
