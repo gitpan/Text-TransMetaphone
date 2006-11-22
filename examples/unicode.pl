@@ -1,7 +1,9 @@
 #!/usr/bin/perl -w
 
+use strict;
 use utf8;
 use Text::TransMetaphone qw( trans_metaphone );
+binmode(STDOUT, ":utf8");  # works fine w/o this on linux
 
 my %unicode =(
 	en_US => "Unicode",
@@ -59,7 +61,7 @@ changed.
 
 =head1 AUTHOR
 
-Daniel Yacob Mekonnen,  L<Yacob@EthiopiaOnline.Net|mailto:Yacob@EthiopiaOnline.Net>
+Daniel Yacob,  L<dyacob@cpan.org|mailto:dyacob@cpan.org>
 
 =head1 SEE ALSO
 

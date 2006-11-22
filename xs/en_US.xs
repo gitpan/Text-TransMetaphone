@@ -33,13 +33,13 @@ IsVowel(metastring * s, int pos)
 int
 SlavoGermanic(metastring * s)
 {
-    if ((char *) strstr(s->str, "W"))
+    if ((char *) strstr((char*)s->str, "W"))
 	return 1;
-    else if ((char *) strstr(s->str, "K"))
+    else if ((char *) strstr((char*)s->str, "K"))
 	return 1;
-    else if ((char *) strstr(s->str, "CZ"))
+    else if ((char *) strstr((char*)s->str, "CZ"))
 	return 1;
-    else if ((char *) strstr(s->str, "WITZ"))
+    else if ((char *) strstr((char*)s->str, "WITZ"))
 	return 1;
     else
 	return 0;
@@ -47,7 +47,7 @@ SlavoGermanic(metastring * s)
 
 
 void
-TransMetaphone_en_US(char *str, unsigned char **codes)
+TransMetaphone_en_US(unsigned char *str, unsigned char **codes)
 {
     int        length;
     metastring *original;
@@ -58,14 +58,14 @@ TransMetaphone_en_US(char *str, unsigned char **codes)
 
     current = 0;
     /* we need the real length and last prior to padding */
-    length  = strlen(str); 
+    length  = strlen((char*)str); 
     last    = length - 1; 
     original = NewMetaString(str);
     /* Pad original so we can index beyond end */
-    MetaphAdd(original, "     ");
+    MetaphAdd(original, (unsigned char*)"     ");
 
-    primary = NewMetaString("");
-    secondary = NewMetaString("");
+    primary = NewMetaString((unsigned char*)"");
+    secondary = NewMetaString((unsigned char*)"");
     primary->free_string_on_destroy = 0;
     secondary->free_string_on_destroy = 0;
 
@@ -78,8 +78,8 @@ TransMetaphone_en_US(char *str, unsigned char **codes)
     /* Initial 'X' is pronounced 'Z' e.g. 'Xavier' */
     if (GetAt(original, 0) == 'X')
       {
-	  MetaphAdd(primary, "s");	/* 'Z' maps to 'S' */
-	  MetaphAdd(secondary, "s");
+	  MetaphAdd(primary, (unsigned char*)"s");	/* 'Z' maps to 'S' */
+	  MetaphAdd(secondary, (unsigned char*)"s");
 	  current += 1;
       }
 
@@ -100,8 +100,8 @@ TransMetaphone_en_US(char *str, unsigned char **codes)
 		if (current == 0)
                   {
 		    /* all init vowels now map to 'A' */
-		    MetaphAdd(primary, "a");
-		    MetaphAdd(secondary, "a");
+		    MetaphAdd(primary, (unsigned char*)"a");
+		    MetaphAdd(secondary, (unsigned char*)"a");
                   }
 		current += 1;
 		break;
@@ -109,8 +109,8 @@ TransMetaphone_en_US(char *str, unsigned char **codes)
 	    case 'B':
 
 		/* "-mb", e.g", "dumb", already skipped over... */
-		MetaphAdd(primary, "p");
-		MetaphAdd(secondary, "p");
+		MetaphAdd(primary, (unsigned char*)"p");
+		MetaphAdd(secondary, (unsigned char*)"p");
 
 		if (GetAt(original, current + 1) == 'B')
 		    current += 2;
@@ -119,8 +119,8 @@ TransMetaphone_en_US(char *str, unsigned char **codes)
 		break;
 
 	    case 0xc7: /* Ç */
-		MetaphAdd(primary, "s");
-		MetaphAdd(secondary, "s");
+		MetaphAdd(primary, (unsigned char*)"s");
+		MetaphAdd(secondary, (unsigned char*)"s");
 		current += 1;
 		break;
 
@@ -134,8 +134,8 @@ TransMetaphone_en_US(char *str, unsigned char **codes)
 			    || StringAt(original, (current - 2), 6, "BACHER",
 					"MACHER", ""))))
 		  {
-		      MetaphAdd(primary, "k");
-		      MetaphAdd(secondary, "k");
+		      MetaphAdd(primary, (unsigned char*)"k");
+		      MetaphAdd(secondary, (unsigned char*)"k");
 		      current += 2;
 		      break;
 		  }
@@ -144,8 +144,8 @@ TransMetaphone_en_US(char *str, unsigned char **codes)
 		if ((current == 0)
 		    && StringAt(original, current, 6, "CAESAR", ""))
 		  {
-		      MetaphAdd(primary, "s");
-		      MetaphAdd(secondary, "s");
+		      MetaphAdd(primary, (unsigned char*)"s");
+		      MetaphAdd(secondary, (unsigned char*)"s");
 		      current += 2;
 		      break;
 		  }
@@ -153,8 +153,8 @@ TransMetaphone_en_US(char *str, unsigned char **codes)
 		/* italian 'chianti' */
 		if (StringAt(original, current, 4, "CHIA", ""))
 		  {
-		      MetaphAdd(primary, "k");
-		      MetaphAdd(secondary, "k");
+		      MetaphAdd(primary, (unsigned char*)"k");
+		      MetaphAdd(secondary, (unsigned char*)"k");
 		      current += 2;
 		      break;
 		  }
@@ -165,8 +165,8 @@ TransMetaphone_en_US(char *str, unsigned char **codes)
 		      if ((current > 0)
 			  && StringAt(original, current, 4, "CHAE", ""))
 			{
-			    MetaphAdd(primary, "k");
-			    MetaphAdd(secondary, "ʃ");
+			    MetaphAdd(primary, (unsigned char*)"k");
+			    MetaphAdd(secondary, (unsigned char*)"ʃ");
 			    current += 2;
 			    break;
 			}
@@ -178,8 +178,8 @@ TransMetaphone_en_US(char *str, unsigned char **codes)
 				       "HYM", "HIA", "HEM", ""))
 			  && !StringAt(original, 0, 5, "CHORE", ""))
 			{
-			    MetaphAdd(primary, "k");
-			    MetaphAdd(secondary, "k");
+			    MetaphAdd(primary, (unsigned char*)"k");
+			    MetaphAdd(secondary, (unsigned char*)"k");
 			    current += 2;
 			    break;
 			}
@@ -199,8 +199,8 @@ TransMetaphone_en_US(char *str, unsigned char **codes)
 			  && StringAt(original, (current + 2), 1, "L", "R",
 		                      "N", "M", "B", "H", "F", "V", "W", " ", "")))
 			{
-			    MetaphAdd(primary, "k");
-			    MetaphAdd(secondary, "k");
+			    MetaphAdd(primary, (unsigned char*)"k");
+			    MetaphAdd(secondary, (unsigned char*)"k");
 			}
 		      else
 			{
@@ -209,19 +209,19 @@ TransMetaphone_en_US(char *str, unsigned char **codes)
 				  if (StringAt(original, 0, 2, "MC", ""))
 				    {
 					/* e.g., "McHugh" */
-					MetaphAdd(primary, "k");
-					MetaphAdd(secondary, "k");
+					MetaphAdd(primary, (unsigned char*)"k");
+					MetaphAdd(secondary, (unsigned char*)"k");
 				    }
 				  else
 				    {
-					MetaphAdd(primary, "ʧ");
-					MetaphAdd(secondary, "k");
+					MetaphAdd(primary, (unsigned char*)"ʧ");
+					MetaphAdd(secondary, (unsigned char*)"k");
 				    }
 			      }
 			    else
 			      {
-				  MetaphAdd(primary, "ʃ");
-				  MetaphAdd(secondary, "ʃ");
+				  MetaphAdd(primary, (unsigned char*)"ʃ");
+				  MetaphAdd(secondary, (unsigned char*)"ʃ");
 			      }
 			}
 		      current += 2;
@@ -231,8 +231,8 @@ TransMetaphone_en_US(char *str, unsigned char **codes)
 		if (StringAt(original, current, 2, "CZ", "")
 		    && !StringAt(original, (current - 2), 4, "WICZ", ""))
 		  {
-		      MetaphAdd(primary, "s");
-		      MetaphAdd(secondary, "ʃ");
+		      MetaphAdd(primary, (unsigned char*)"s");
+		      MetaphAdd(secondary, (unsigned char*)"ʃ");
 		      current += 2;
 		      break;
 		  }
@@ -240,8 +240,8 @@ TransMetaphone_en_US(char *str, unsigned char **codes)
 		/* e.g., 'focaccia' */
 		if (StringAt(original, (current + 1), 3, "CIA", ""))
 		  {
-		      MetaphAdd(primary, "ʃ");
-		      MetaphAdd(secondary, "ʃ");
+		      MetaphAdd(primary, (unsigned char*)"ʃ");
+		      MetaphAdd(secondary, (unsigned char*)"ʃ");
 		      current += 3;
 		      break;
 		  }
@@ -260,30 +260,30 @@ TransMetaphone_en_US(char *str, unsigned char **codes)
 			      || StringAt(original, (current - 1), 5, "UCCEE",
 					  "UCCES", ""))
 			    {
-				MetaphAdd(primary, "ks");
-				MetaphAdd(secondary, "ks");
+				MetaphAdd(primary, (unsigned char*)"ks");
+				MetaphAdd(secondary, (unsigned char*)"ks");
 				/* 'bacci', 'bertucci', other italian */
 			    }
 			  else
 			    {
-				MetaphAdd(primary, "ʃ");
-				MetaphAdd(secondary, "ʃ");
+				MetaphAdd(primary, (unsigned char*)"ʃ");
+				MetaphAdd(secondary, (unsigned char*)"ʃ");
 			    }
 			  current += 3;
 			  break;
 		      }
 		    else
 		      {	  /* Pierce's rule */
-			  MetaphAdd(primary, "k");
-			  MetaphAdd(secondary, "k");
+			  MetaphAdd(primary, (unsigned char*)"k");
+			  MetaphAdd(secondary, (unsigned char*)"k");
 			  current += 2;
 			  break;
 		      }
 
 		if (StringAt(original, current, 2, "CK", "CG", "CQ", ""))
 		  {
-		      MetaphAdd(primary, "k");
-		      MetaphAdd(secondary, "k");
+		      MetaphAdd(primary, (unsigned char*)"k");
+		      MetaphAdd(secondary, (unsigned char*)"k");
 		      current += 2;
 		      break;
 		  }
@@ -294,21 +294,21 @@ TransMetaphone_en_US(char *str, unsigned char **codes)
 		      if (StringAt
 			  (original, current, 3, "CIO", "CIE", "CIA", ""))
 			{
-			    MetaphAdd(primary, "s");
-			    MetaphAdd(secondary, "ʃ");
+			    MetaphAdd(primary, (unsigned char*)"s");
+			    MetaphAdd(secondary, (unsigned char*)"ʃ");
 			}
 		      else
 			{
-			    MetaphAdd(primary, "s");
-			    MetaphAdd(secondary, "s");
+			    MetaphAdd(primary, (unsigned char*)"s");
+			    MetaphAdd(secondary, (unsigned char*)"s");
 			}
 		      current += 2;
 		      break;
 		  }
 
 		/* else */
-		MetaphAdd(primary, "k");
-		MetaphAdd(secondary, "k");
+		MetaphAdd(primary, (unsigned char*)"k");
+		MetaphAdd(secondary, (unsigned char*)"k");
 
 		/* name sent in 'mac caffrey', 'mac gregor */
 		if (StringAt(original, (current + 1), 2, " C", " Q", " G", ""))
@@ -327,16 +327,16 @@ TransMetaphone_en_US(char *str, unsigned char **codes)
 		      if (StringAt(original, (current + 2), 1, "I", "E", "Y", ""))
 		        {
 			    /* e.g. 'edge' */
-			    MetaphAdd(primary, "ʤ");
-			    MetaphAdd(secondary, "j");
+			    MetaphAdd(primary, (unsigned char*)"ʤ");
+			    MetaphAdd(secondary, (unsigned char*)"j");
 			    current += 3;
 			    break;
 		        }
 		      else
 		        {
 			    /* e.g. 'edgar' */
-			    MetaphAdd(primary, "tk");
-			    MetaphAdd(secondary, "tk");
+			    MetaphAdd(primary, (unsigned char*)"tk");
+			    MetaphAdd(secondary, (unsigned char*)"tk");
 			    current += 2;
 			    break;
 		        }
@@ -344,15 +344,15 @@ TransMetaphone_en_US(char *str, unsigned char **codes)
 
 		if (StringAt(original, current, 2, "DT", "DD", ""))
 		  {
-		      MetaphAdd(primary, "t");
-		      MetaphAdd(secondary, "t");
+		      MetaphAdd(primary, (unsigned char*)"t");
+		      MetaphAdd(secondary, (unsigned char*)"t");
 		      current += 2;
 		      break;
 		  }
 
 		/* else */
-		MetaphAdd(primary, "t");
-		MetaphAdd(secondary, "t");
+		MetaphAdd(primary, (unsigned char*)"t");
+		MetaphAdd(secondary, (unsigned char*)"t");
 		current += 1;
 		break;
 
@@ -361,8 +361,8 @@ TransMetaphone_en_US(char *str, unsigned char **codes)
 		    current += 2;
 		else
 		    current += 1;
-		MetaphAdd(primary, "f");
-		MetaphAdd(secondary, "f");
+		MetaphAdd(primary, (unsigned char*)"f");
+		MetaphAdd(secondary, (unsigned char*)"f");
 		break;
 
 	    case 'G':
@@ -370,8 +370,8 @@ TransMetaphone_en_US(char *str, unsigned char **codes)
 		  {
 		      if ((current > 0) && !IsVowel(original, current - 1))
 			{
-			    MetaphAdd(primary, "k");
-			    MetaphAdd(secondary, "k");
+			    MetaphAdd(primary, (unsigned char*)"k");
+			    MetaphAdd(secondary, (unsigned char*)"k");
 			    current += 2;
 			    break;
 			}
@@ -383,13 +383,13 @@ TransMetaphone_en_US(char *str, unsigned char **codes)
 			      {
 				  if (GetAt(original, current + 2) == 'I')
 				    {
-					MetaphAdd(primary, "j");
-					MetaphAdd(secondary, "j");
+					MetaphAdd(primary, (unsigned char*)"j");
+					MetaphAdd(secondary, (unsigned char*)"j");
 				    }
 				  else
 				    {
-					MetaphAdd(primary, "k");
-					MetaphAdd(secondary, "k");
+					MetaphAdd(primary, (unsigned char*)"k");
+					MetaphAdd(secondary, (unsigned char*)"k");
 				    }
 				  current += 2;
 				  break;
@@ -417,16 +417,16 @@ TransMetaphone_en_US(char *str, unsigned char **codes)
 				&& StringAt(original, (current - 3), 1, "C",
 					    "G", "L", "R", "T", ""))
 			      {
-				  MetaphAdd(primary, "f");
-				  MetaphAdd(secondary, "f");
+				  MetaphAdd(primary, (unsigned char*)"f");
+				  MetaphAdd(secondary, (unsigned char*)"f");
 			      }
 			    else if ((current > 0)
 				     && GetAt(original, current - 1) != 'I')
 			      {
 
 
-				  MetaphAdd(primary, "k");
-				  MetaphAdd(secondary, "k");
+				  MetaphAdd(primary, (unsigned char*)"k");
+				  MetaphAdd(secondary, (unsigned char*)"k");
 			      }
 
 			    current += 2;
@@ -439,8 +439,8 @@ TransMetaphone_en_US(char *str, unsigned char **codes)
 		      if ((current == 1) && IsVowel(original, 0)
 			  && !SlavoGermanic(original))
 			{
-			    MetaphAdd(primary, "kn");
-			    MetaphAdd(secondary, "n");
+			    MetaphAdd(primary, (unsigned char*)"kn");
+			    MetaphAdd(secondary, (unsigned char*)"n");
 			}
 		      else
 			  /* not e.g. 'cagney' */
@@ -448,13 +448,13 @@ TransMetaphone_en_US(char *str, unsigned char **codes)
 			      && (GetAt(original, current + 1) != 'Y')
 			      && !SlavoGermanic(original))
 			{
-			    MetaphAdd(primary, "n");
-			    MetaphAdd(secondary, "kn");
+			    MetaphAdd(primary, (unsigned char*)"n");
+			    MetaphAdd(secondary, (unsigned char*)"kn");
 			}
 		      else
                         {
-			    MetaphAdd(primary, "kn");
-		            MetaphAdd(secondary, "kn");
+			    MetaphAdd(primary, (unsigned char*)"kn");
+		            MetaphAdd(secondary, (unsigned char*)"kn");
                         }
 		      current += 2;
 		      break;
@@ -464,8 +464,8 @@ TransMetaphone_en_US(char *str, unsigned char **codes)
 		if (StringAt(original, (current + 1), 2, "LI", "")
 		    && !SlavoGermanic(original))
 		  {
-		      MetaphAdd(primary, "kl");
-		      MetaphAdd(secondary, "l");
+		      MetaphAdd(primary, (unsigned char*)"kl");
+		      MetaphAdd(secondary, (unsigned char*)"l");
 		      current += 2;
 		      break;
 		  }
@@ -477,8 +477,8 @@ TransMetaphone_en_US(char *str, unsigned char **codes)
 				    "EB", "EL", "EY", "IB", "IL", "IN", "IE",
 				    "EI", "ER", "")))
 		  {
-		      MetaphAdd(primary, "k");
-		      MetaphAdd(secondary, "j");
+		      MetaphAdd(primary, (unsigned char*)"k");
+		      MetaphAdd(secondary, (unsigned char*)"j");
 		      current += 2;
 		      break;
 		  }
@@ -492,8 +492,8 @@ TransMetaphone_en_US(char *str, unsigned char **codes)
 		    && !StringAt(original, (current - 1), 3, "RGY", "OGY",
 				 ""))
 		  {
-		      MetaphAdd(primary, "k");
-		      MetaphAdd(secondary, "j");
+		      MetaphAdd(primary, (unsigned char*)"k");
+		      MetaphAdd(secondary, (unsigned char*)"j");
 		      current += 2;
 		      break;
 		  }
@@ -508,8 +508,8 @@ TransMetaphone_en_US(char *str, unsigned char **codes)
 			   || StringAt(original, 0, 3, "SCH", ""))
 			  || StringAt(original, (current + 1), 2, "ET", ""))
 			{
-			    MetaphAdd(primary, "k");
-			    MetaphAdd(secondary, "k");
+			    MetaphAdd(primary, (unsigned char*)"k");
+			    MetaphAdd(secondary, (unsigned char*)"k");
 			}
 		      else
 			{
@@ -517,13 +517,13 @@ TransMetaphone_en_US(char *str, unsigned char **codes)
 			    if (StringAt
 				(original, (current + 1), 4, "IER ", ""))
 			      {
-				  MetaphAdd(primary, "j");
-				  MetaphAdd(secondary, "j");
+				  MetaphAdd(primary, (unsigned char*)"j");
+				  MetaphAdd(secondary, (unsigned char*)"j");
 			      }
 			    else
 			      {
-				  MetaphAdd(primary, "j");
-				  MetaphAdd(secondary, "k");
+				  MetaphAdd(primary, (unsigned char*)"j");
+				  MetaphAdd(secondary, (unsigned char*)"k");
 			      }
 			}
 		      current += 2;
@@ -534,8 +534,8 @@ TransMetaphone_en_US(char *str, unsigned char **codes)
 		    current += 2;
 		else
 		    current += 1;
-		MetaphAdd(primary, "k");
-		MetaphAdd(secondary, "k");
+		MetaphAdd(primary, (unsigned char*)"k");
+		MetaphAdd(secondary, (unsigned char*)"k");
 		break;
 
 	    case 'H':
@@ -543,8 +543,8 @@ TransMetaphone_en_US(char *str, unsigned char **codes)
 		if (((current == 0) || IsVowel(original, current - 1))
 		    && IsVowel(original, current + 1))
 		  {
-		      MetaphAdd(primary, "h");
-		      MetaphAdd(secondary, "h");
+		      MetaphAdd(primary, (unsigned char*)"h");
+		      MetaphAdd(secondary, (unsigned char*)"h");
 		      current += 2;
 		  }
 		else		/* also takes care of 'HH' */
@@ -560,13 +560,13 @@ TransMetaphone_en_US(char *str, unsigned char **codes)
 			   && (GetAt(original, current + 4) == ' '))
 			  || StringAt(original, 0, 4, "SAN ", ""))
 			{
-			    MetaphAdd(primary, "h");
-			    MetaphAdd(secondary, "h");
+			    MetaphAdd(primary, (unsigned char*)"h");
+			    MetaphAdd(secondary, (unsigned char*)"h");
 			}
 		      else
 			{
-			    MetaphAdd(primary, "j");
-			    MetaphAdd(secondary, "h");
+			    MetaphAdd(primary, (unsigned char*)"j");
+			    MetaphAdd(secondary, (unsigned char*)"h");
 			}
 		      current += 1;
 		      break;
@@ -575,8 +575,8 @@ TransMetaphone_en_US(char *str, unsigned char **codes)
 		if ((current == 0)
 		    && !StringAt(original, current, 4, "JOSE", ""))
 		  {
-		      MetaphAdd(primary, "ʤ");	/* Yankelovich/Jankelowicz */
-		      MetaphAdd(secondary, "a");
+		      MetaphAdd(primary, (unsigned char*)"ʤ");	/* Yankelovich/Jankelowicz */
+		      MetaphAdd(secondary, (unsigned char*)"a");
 		  }
 		else
 		  {
@@ -586,15 +586,15 @@ TransMetaphone_en_US(char *str, unsigned char **codes)
 			  && ((GetAt(original, current + 1) == 'A')
 			      || (GetAt(original, current + 1) == 'O')))
 			{
-			    MetaphAdd(primary, "j");
-			    MetaphAdd(secondary, "h");
+			    MetaphAdd(primary, (unsigned char*)"j");
+			    MetaphAdd(secondary, (unsigned char*)"h");
 			}
 		      else
 			{
 			    if (current == last)
 			      {
-				  MetaphAdd(primary, "ʤ");
-				  MetaphAdd(secondary, "");
+				  MetaphAdd(primary, (unsigned char*)"ʤ");
+				  MetaphAdd(secondary, (unsigned char*)"");
 			      }
 			    else
 			      {
@@ -603,8 +603,8 @@ TransMetaphone_en_US(char *str, unsigned char **codes)
 				      && !StringAt(original, (current - 1), 1,
 						   "S", "K", "L", "")) 
                                     {
-				      MetaphAdd(primary, "j");
-				      MetaphAdd(secondary, "j");
+				      MetaphAdd(primary, (unsigned char*)"j");
+				      MetaphAdd(secondary, (unsigned char*)"j");
                                     }
 			      }
 			}
@@ -623,14 +623,14 @@ TransMetaphone_en_US(char *str, unsigned char **codes)
 		    else
 		        current += 1;
 
-		    MetaphAdd(primary, "k");
+		    MetaphAdd(primary, (unsigned char*)"k");
 		}
 		else {
 		    /* husky "kh" from arabic */
-		    MetaphAdd(primary, "x");
+		    MetaphAdd(primary, (unsigned char*)"x");
 		    current += 2;
 		}
-		MetaphAdd(secondary, "k");
+		MetaphAdd(secondary, (unsigned char*)"k");
 		break;
 
 	    case 'L':
@@ -644,8 +644,8 @@ TransMetaphone_en_US(char *str, unsigned char **codes)
 			    || StringAt(original, last, 1, "A", "O", ""))
 			   && StringAt(original, (current - 1), 4, "ALLE", "")))
 			{
-			    MetaphAdd(primary, "l");
-			    MetaphAdd(secondary, "");
+			    MetaphAdd(primary, (unsigned char*)"l");
+			    MetaphAdd(secondary, (unsigned char*)"");
 			    current += 2;
 			    break;
 			}
@@ -653,8 +653,8 @@ TransMetaphone_en_US(char *str, unsigned char **codes)
 		  }
 		else
 		    current += 1;
-		MetaphAdd(primary, "l");
-		MetaphAdd(secondary, "l");
+		MetaphAdd(primary, (unsigned char*)"l");
+		MetaphAdd(secondary, (unsigned char*)"l");
 		break;
 
 	    case 'M':
@@ -666,14 +666,14 @@ TransMetaphone_en_US(char *str, unsigned char **codes)
 		    current += 2;
 		else
 		    current += 1;
-		MetaphAdd(primary, "m");
-		MetaphAdd(secondary, "m");
+		MetaphAdd(primary, (unsigned char*)"m");
+		MetaphAdd(secondary, (unsigned char*)"m");
 		break;
 
 	    case 'N':
 		if (GetAt(original, current + 1) == 'Y')
 		  {
-		    MetaphAdd(primary, "ɲ");
+		    MetaphAdd(primary, (unsigned char*)"ɲ");
 	            current += 2;
 		  }
 		else
@@ -682,22 +682,22 @@ TransMetaphone_en_US(char *str, unsigned char **codes)
 		        current += 2;
 		    else
 		        current += 1;
-		    MetaphAdd(primary, "n");
+		    MetaphAdd(primary, (unsigned char*)"n");
 		  }
-		MetaphAdd(secondary, "n");
+		MetaphAdd(secondary, (unsigned char*)"n");
 		break;
 
 	    case 0xd1: /* Ñ */
 		current += 1;
-		MetaphAdd(primary, "ɲ");
-		MetaphAdd(secondary, "n");
+		MetaphAdd(primary, (unsigned char*)"ɲ");
+		MetaphAdd(secondary, (unsigned char*)"n");
 		break;
 
 	    case 'P':
 		if (GetAt(original, current + 1) == 'H')
 		  {
-		      MetaphAdd(primary, "f");
-		      MetaphAdd(secondary, "f");
+		      MetaphAdd(primary, (unsigned char*)"f");
+		      MetaphAdd(secondary, (unsigned char*)"f");
 		      current += 2;
 		      break;
 		  }
@@ -707,14 +707,14 @@ TransMetaphone_en_US(char *str, unsigned char **codes)
 		    current += 2;
 		else
 		    current += 1;
-		MetaphAdd(primary, "p");
-		MetaphAdd(secondary, "p");
+		MetaphAdd(primary, (unsigned char*)"p");
+		MetaphAdd(secondary, (unsigned char*)"p");
 		break;
 
 	    case 'Q':
 		if (GetAt(original, current + 1) == 'U')
                   {
-		    MetaphAdd(primary, "kw");
+		    MetaphAdd(primary, (unsigned char*)"kw");
 		    current += 1;  /* total of 2 */
 		  }
 		else
@@ -724,10 +724,10 @@ TransMetaphone_en_US(char *str, unsigned char **codes)
 		    else
 		        current += 1;
 
-		    MetaphAdd(primary, "k'");
+		    MetaphAdd(primary, (unsigned char*)"k'");
 		  }
 
-		MetaphAdd(secondary, "k");
+		MetaphAdd(secondary, (unsigned char*)"k");
 		break;
 
 	    case 'R':
@@ -737,13 +737,13 @@ TransMetaphone_en_US(char *str, unsigned char **codes)
 		    && StringAt(original, (current - 2), 2, "IE", "")
 		    && !StringAt(original, (current - 4), 2, "ME", "MA", ""))
 		  {
-		      MetaphAdd(primary, "");
-		      MetaphAdd(secondary, "r");
+		      MetaphAdd(primary, (unsigned char*)"");
+		      MetaphAdd(secondary, (unsigned char*)"r");
 		  }
 		else
 		  {
-		      MetaphAdd(primary, "r");
-		      MetaphAdd(secondary, "r");
+		      MetaphAdd(primary, (unsigned char*)"r");
+		      MetaphAdd(secondary, (unsigned char*)"r");
 		  }
 
 		if (GetAt(original, current + 1) == 'R')
@@ -764,8 +764,8 @@ TransMetaphone_en_US(char *str, unsigned char **codes)
 		if ((current == 0)
 		    && StringAt(original, current, 5, "SUGAR", ""))
 		  {
-		      MetaphAdd(primary, "ʃ");
-		      MetaphAdd(secondary, "s");
+		      MetaphAdd(primary, (unsigned char*)"ʃ");
+		      MetaphAdd(secondary, (unsigned char*)"s");
 		      current += 1;
 		      break;
 		  }
@@ -777,13 +777,13 @@ TransMetaphone_en_US(char *str, unsigned char **codes)
 			  (original, (current + 1), 4, "HEIM", "HOEK", "HOLM",
 			   "HOLZ", ""))
 			{
-			    MetaphAdd(primary, "s");
-			    MetaphAdd(secondary, "s");
+			    MetaphAdd(primary, (unsigned char*)"s");
+			    MetaphAdd(secondary, (unsigned char*)"s");
 			}
 		      else
 			{
-			    MetaphAdd(primary, "ʃ");
-			    MetaphAdd(secondary, "ʃ");
+			    MetaphAdd(primary, (unsigned char*)"ʃ");
+			    MetaphAdd(secondary, (unsigned char*)"ʃ");
 			}
 		      current += 2;
 		      break;
@@ -795,13 +795,13 @@ TransMetaphone_en_US(char *str, unsigned char **codes)
 		  {
 		      if (!SlavoGermanic(original))
 			{
-			    MetaphAdd(primary, "s");
-			    MetaphAdd(secondary, "ʃ");
+			    MetaphAdd(primary, (unsigned char*)"s");
+			    MetaphAdd(secondary, (unsigned char*)"ʃ");
 			}
 		      else
 			{
-			    MetaphAdd(primary, "s");
-			    MetaphAdd(secondary, "s");
+			    MetaphAdd(primary, (unsigned char*)"s");
+			    MetaphAdd(secondary, (unsigned char*)"s");
 			}
 		      current += 3;
 		      break;
@@ -813,8 +813,8 @@ TransMetaphone_en_US(char *str, unsigned char **codes)
 		     && StringAt(original, (current + 1), 1, "M", "N", "L", "W", ""))
 		    || StringAt(original, (current + 1), 1, "Z", ""))
 		  {
-		      MetaphAdd(primary, "s");
-		      MetaphAdd(secondary, "ʃ");
+		      MetaphAdd(primary, (unsigned char*)"s");
+		      MetaphAdd(secondary, (unsigned char*)"ʃ");
 		      if (StringAt(original, (current + 1), 1, "Z", ""))
 			  current += 2;
 		      else
@@ -833,13 +833,13 @@ TransMetaphone_en_US(char *str, unsigned char **codes)
 				/* 'schermerhorn', 'schenker' */
 				if (StringAt(original, (current + 3), 2, "ER", "EN", ""))
 				  {
-				      MetaphAdd(primary, "ʃ");
-				      MetaphAdd(secondary, "sk");
+				      MetaphAdd(primary, (unsigned char*)"ʃ");
+				      MetaphAdd(secondary, (unsigned char*)"sk");
 				  }
 				else
                                   {
-				      MetaphAdd(primary, "sk");
-				      MetaphAdd(secondary, "sk");
+				      MetaphAdd(primary, (unsigned char*)"sk");
+				      MetaphAdd(secondary, (unsigned char*)"sk");
                                   }
 				current += 3;
 				break;
@@ -849,13 +849,13 @@ TransMetaphone_en_US(char *str, unsigned char **codes)
 				if ((current == 0) && !IsVowel(original, 3)
 				    && (GetAt(original, 3) != 'W'))
 				  {
-				      MetaphAdd(primary, "ʃ");
-				      MetaphAdd(secondary, "s");
+				      MetaphAdd(primary, (unsigned char*)"ʃ");
+				      MetaphAdd(secondary, (unsigned char*)"s");
 				  }
 				else
 				  {
-				      MetaphAdd(primary, "ʃ");
-				      MetaphAdd(secondary, "ʃ");
+				      MetaphAdd(primary, (unsigned char*)"ʃ");
+				      MetaphAdd(secondary, (unsigned char*)"ʃ");
 				  }
 				current += 3;
 				break;
@@ -863,14 +863,14 @@ TransMetaphone_en_US(char *str, unsigned char **codes)
 
 		      if (StringAt(original, (current + 2), 1, "I", "E", "Y", ""))
 			{
-			    MetaphAdd(primary, "S");
-			    MetaphAdd(secondary, "s");
+			    MetaphAdd(primary, (unsigned char*)"S");
+			    MetaphAdd(secondary, (unsigned char*)"s");
 			    current += 3;
 			    break;
 			}
 		      /* else */
-		      MetaphAdd(primary, "sk");
-		      MetaphAdd(secondary, "sk");
+		      MetaphAdd(primary, (unsigned char*)"sk");
+		      MetaphAdd(secondary, (unsigned char*)"sk");
 		      current += 3;
 		      break;
 		  }
@@ -879,13 +879,13 @@ TransMetaphone_en_US(char *str, unsigned char **codes)
 		if ((current == last)
 		    && StringAt(original, (current - 2), 2, "AI", "OI", ""))
 		  {
-		      MetaphAdd(primary, "");
-		      MetaphAdd(secondary, "s");
+		      MetaphAdd(primary, (unsigned char*)"");
+		      MetaphAdd(secondary, (unsigned char*)"s");
 		  }
 		else
 		  {
-		      MetaphAdd(primary, "s");
-		      MetaphAdd(secondary, "s");
+		      MetaphAdd(primary, (unsigned char*)"s");
+		      MetaphAdd(secondary, (unsigned char*)"s");
 		  }
 
 		if (StringAt(original, (current + 1), 1, "S", "Z", ""))
@@ -897,16 +897,16 @@ TransMetaphone_en_US(char *str, unsigned char **codes)
 	    case 'T':
 		if (StringAt(original, current, 4, "TION", ""))
 		  {
-		      MetaphAdd(primary, "ʃ");
-		      MetaphAdd(secondary, "ʃ");
+		      MetaphAdd(primary, (unsigned char*)"ʃ");
+		      MetaphAdd(secondary, (unsigned char*)"ʃ");
 		      current += 3;
 		      break;
 		  }
 
 		if (StringAt(original, current, 3, "TIA", "TCH", ""))
 		  {
-		      MetaphAdd(primary, "ʃ");
-		      MetaphAdd(secondary, "ʃ");
+		      MetaphAdd(primary, (unsigned char*)"ʃ");
+		      MetaphAdd(secondary, (unsigned char*)"ʃ");
 		      current += 3;
 		      break;
 		  }
@@ -919,13 +919,13 @@ TransMetaphone_en_US(char *str, unsigned char **codes)
 			  || StringAt(original, 0, 4, "VAN ", "VON ", "")
 			  || StringAt(original, 0, 3, "SCH", ""))
 			{
-			    MetaphAdd(primary, "t");
-			    MetaphAdd(secondary, "t");
+			    MetaphAdd(primary, (unsigned char*)"t");
+			    MetaphAdd(secondary, (unsigned char*)"t");
 			}
 		      else
 			{
-			    MetaphAdd(primary, "Θ");
-			    MetaphAdd(secondary, "t");
+			    MetaphAdd(primary, (unsigned char*)"Θ");
+			    MetaphAdd(secondary, (unsigned char*)"t");
 			}
 		      current += 2;
 		      break;
@@ -935,8 +935,8 @@ TransMetaphone_en_US(char *str, unsigned char **codes)
 		    current += 2;
 		else
 		    current += 1;
-		MetaphAdd(primary, "t");
-		MetaphAdd(secondary, "t");
+		MetaphAdd(primary, (unsigned char*)"t");
+		MetaphAdd(secondary, (unsigned char*)"t");
 		break;
 
 	    case 'V':
@@ -944,16 +944,16 @@ TransMetaphone_en_US(char *str, unsigned char **codes)
 		    current += 2;
 		else
 		    current += 1;
-		MetaphAdd(primary, "f");
-		MetaphAdd(secondary, "f");
+		MetaphAdd(primary, (unsigned char*)"f");
+		MetaphAdd(secondary, (unsigned char*)"f");
 		break;
 
 	    case 'W':
 		/* can also be in middle of word */
 		if (StringAt(original, current, 2, "WR", ""))
 		  {
-		      MetaphAdd(primary, "r");
-		      MetaphAdd(secondary, "r");
+		      MetaphAdd(primary, (unsigned char*)"r");
+		      MetaphAdd(secondary, (unsigned char*)"r");
 		      current += 2;
 		      break;
 		  }
@@ -965,14 +965,14 @@ TransMetaphone_en_US(char *str, unsigned char **codes)
 		      /* Wasserman should match Vasserman */
 		      if (IsVowel(original, current + 1))
 			{
-			    MetaphAdd(primary, "a");
-			    MetaphAdd(secondary, "f");
+			    MetaphAdd(primary, (unsigned char*)"a");
+			    MetaphAdd(secondary, (unsigned char*)"f");
 			}
 		      else
 			{
 			    /* need Uomo to match Womo */
-			    MetaphAdd(primary, "a");
-			    MetaphAdd(secondary, "a");
+			    MetaphAdd(primary, (unsigned char*)"a");
+			    MetaphAdd(secondary, (unsigned char*)"a");
 			}
 		  }
 
@@ -982,8 +982,8 @@ TransMetaphone_en_US(char *str, unsigned char **codes)
 				"OWSKI", "OWSKY", "")
 		    || StringAt(original, 0, 3, "SCH", ""))
 		  {
-		      MetaphAdd(primary, "");
-		      MetaphAdd(secondary, "f");
+		      MetaphAdd(primary, (unsigned char*)"");
+		      MetaphAdd(secondary, (unsigned char*)"f");
 		      current += 1;
 		      break;
 		  }
@@ -991,8 +991,8 @@ TransMetaphone_en_US(char *str, unsigned char **codes)
 		/* polish e.g. 'filipowicz' */
 		if (StringAt(original, current, 4, "WICZ", "WITZ", ""))
 		  {
-		      MetaphAdd(primary, "ts");
-		      MetaphAdd(secondary, "fx");
+		      MetaphAdd(primary, (unsigned char*)"ts");
+		      MetaphAdd(secondary, (unsigned char*)"fx");
 		      current += 4;
 		      break;
 		  }
@@ -1007,8 +1007,8 @@ TransMetaphone_en_US(char *str, unsigned char **codes)
 		      && (StringAt(original, (current - 3), 3, "IAU", "EAU", "")
 		       || StringAt(original, (current - 2), 2, "AU", "OU", ""))))
                   {
-		      MetaphAdd(primary, "ks");
-		      MetaphAdd(secondary, "ks");
+		      MetaphAdd(primary, (unsigned char*)"ks");
+		      MetaphAdd(secondary, (unsigned char*)"ks");
                   }
                   
 
@@ -1022,8 +1022,8 @@ TransMetaphone_en_US(char *str, unsigned char **codes)
 		/* chinese pinyin e.g. 'zhao' */
 		if (GetAt(original, current + 1) == 'H')
 		  {
-		      MetaphAdd(primary, "j");
-		      MetaphAdd(secondary, "j");
+		      MetaphAdd(primary, (unsigned char*)"j");
+		      MetaphAdd(secondary, (unsigned char*)"j");
 		      current += 2;
 		      break;
 		  }
@@ -1032,13 +1032,13 @@ TransMetaphone_en_US(char *str, unsigned char **codes)
 			    && ((current > 0)
 				&& GetAt(original, current - 1) != 'T')))
 		  {
-		      MetaphAdd(primary, "s");
-		      MetaphAdd(secondary, "ts");
+		      MetaphAdd(primary, (unsigned char*)"s");
+		      MetaphAdd(secondary, (unsigned char*)"ts");
 		  }
 		else
                   {
-		    MetaphAdd(primary, "s");
-		    MetaphAdd(secondary, "s");
+		    MetaphAdd(primary, (unsigned char*)"s");
+		    MetaphAdd(secondary, (unsigned char*)"s");
                   }
 
 		if (GetAt(original, current + 1) == 'Z')
@@ -1085,12 +1085,12 @@ trans_metaphone(str)
         TransMetaphone_en_US(str, codes);
 
 	// fprintf (stderr, "  Pushing %s\n", codes[0]);
-        sv = newSVpv(codes[0], 0);
+        sv = newSVpv((char*)codes[0], 0); /* this could be a problem, there doesn't seem to be a newSV for unsigned chars */
 	SvUTF8_on(sv);
         XPUSHs(sv_2mortal(sv));
-        if ((GIMME == G_ARRAY) && strcmp(codes[0], codes[1])) 
+        if ((GIMME == G_ARRAY) && strcmp((char*)codes[0], (char*)codes[1])) 
           {
-		sv = newSVpv(codes[1], 0);
+		sv = newSVpv((char*)codes[1], 0);
 		SvUTF8_on(sv);
 		XPUSHs(sv_2mortal(sv));
           } 

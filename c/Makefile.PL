@@ -3,7 +3,6 @@ print STDERR "Using compatibility macros/routines for Perl 5.004\n"
     if ($] < 5.0045);
 
 
-
 use ExtUtils::MakeMaker;
 use Config;
 
@@ -18,9 +17,10 @@ WriteMakefile(
 	'LINKTYPE'	=> 'static',
 	'DEFINE'	=> '-DMETA_USE_PERL_MALLOC', # e.g., '-DHAVE_SOMETHING' 
 	'INC'		=> '-I../include',
+	# 'CCFLAGS'	=> '-funsigned-char',
 	'OBJECT'	=> '$(O_FILES)',
-	'AUTHOR'	=> "Daniel Yacob <Yacob\@wMUsers.Com>",
-	'ABSTRACT'	=> "Interface to the ActiveWorks Libraries.",
+	'AUTHOR'	=> "Daniel Yacob <dyacob\@cpan.org>",
+	ABSTRACT	=> "The non-en_US specific functions for the TransMetaphone package.",
 );
 
 $ENV{LD_RUN_PATH} = 

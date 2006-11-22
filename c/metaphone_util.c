@@ -41,14 +41,14 @@ NewMetaString(unsigned char *init_str)
 
     if (init_str == NULL)
 	init_str = empty_string;
-    s->length  = utf8_length(init_str, init_str+strlen(init_str));
+    s->length  = utf8_length(init_str, init_str+strlen((char*)init_str));
     /* preallocate a bit more for potential growth */
     s->bufsize = s->length + 7;
 
     META_MALLOC(s->str, s->bufsize, unsigned char);
     assert( s->str != NULL );
     
-    strncpy(s->str, init_str, s->length + 1);
+    strncpy((char*)s->str, (char*)init_str, s->length + 1);
     s->free_string_on_destroy = 1;
 
     return s;
@@ -134,11 +134,11 @@ StringAt(metastring * s, int start, int length, ...)
 
     do
       {
-	  test = va_arg(ap, char *);
-	  if (*test && (strncmp(pos, test, length) == 0))
+	  test = (unsigned char*)va_arg(ap, char *);
+	  if (*test && (strncmp((char*)pos, (char*)test, length) == 0))
 	      return 1;
       }
-    while (strcmp(test, ""));
+    while (strcmp((char*)test, ""));
 
     va_end(ap);
 
@@ -156,13 +156,13 @@ MetaphAdd(metastring * s, unsigned char *new_str)
 	return;
 
     // add_length = strlen(new_str);
-    add_length = utf8_length(new_str, new_str+strlen(new_str));
+    add_length = utf8_length(new_str, new_str+strlen((char*)new_str));
     if ((s->length + add_length) > (s->bufsize - 1))
       {
 	  IncreaseBuffer(s, add_length);
       }
 
-    strcat(s->str, new_str);
+    strcat((char*)s->str, (char*)new_str);
     s->length += add_length;
     // fprintf (stderr, "  Now: %s\n", s->str);
 }

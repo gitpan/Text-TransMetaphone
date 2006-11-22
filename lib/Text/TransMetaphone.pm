@@ -7,7 +7,7 @@ BEGIN
 use strict;
 use vars qw($VERSION @EXPORT_OK %LocaleRanges);
 
-	$VERSION = "0.06";
+	$VERSION = "0.07";
 
 	@EXPORT_OK = qw( trans_metaphone reverse_key );
 
@@ -178,7 +178,7 @@ View the documentation of individual locale modules for limitations.
 
 =head1 AUTHOR
 
-Daniel Yacob,  L<Yacob@EthiopiaOnline.Net|mailto:Yacob@EthiopiaOnline.Net>
+Daniel Yacob,  L<dyacob@cpan.org|mailto:dyacob@cpan.org>
 
 =head1 COPYRIGHT
 

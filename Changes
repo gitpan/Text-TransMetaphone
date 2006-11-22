@@ -1,3 +1,9 @@
+0.07 Sat Aug 12 12:59:32 EDT 2006
+	- fixed installation problems
+	- masked all unsigned chars to chars for stdlib string functions
+          to make gcc 4.0.3 happy.  This could be hazardous.
+	- tested with perl v5.8.7, on Ubuntu 6.06
+
 0.06 Sat Apr 12 21:23:09 EDT 2003
 	- fixes in am.pm.
 	- am.pm resynced with Regexp::Ethiopic.
